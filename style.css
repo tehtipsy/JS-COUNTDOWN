@@ -1,0 +1,41 @@
+.container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  h1 {
+    font-size: 24px;
+  }
+  
+  #game-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+  
+  #numbers-container {
+    width: 200px;
+  }
+  
+  .number-selection {
+    margin-bottom: 10px;
+  }
+  
+  #solution-container {
+    width: 200px;
+  }
+  
+  #solution-input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  #score-button {
+    width: 100%;
+    padding: 5px;
+  }
+  
+  #score-result {
+    margin-top: 10px;
+  }
+  

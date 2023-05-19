@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Countdown Numbers Game</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Countdown Numbers Game</h1>
+    <div id="game-container">
+      <div id="numbers-container">
+        <h2>Choose Numbers</h2>
+        <div>
+          <label for="large-numbers">Number of Large Numbers:</label>
+          <select id="large-numbers" name="large-numbers">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+      </div>
+      <div id="solution-container">
+        <h2>Solution</h2>
+        <input type="number" id="solution-input" placeholder="Enter your solution">
+        <button id="score-button">Score</button>
+        <div id="score-result"></div>
+      </div>
+    </div>
+    <button id="start-game">Start Game</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
