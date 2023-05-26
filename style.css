@@ -6,6 +6,11 @@
   h1 {
     font-size: 24px;
   }
+
+  canvas {
+    border: 2px solid black;
+  }
+  
   
   #game-container {
     display: flex;
@@ -23,6 +28,10 @@
   
   #solution-container {
     width: 200px;
+  }
+
+  #canvas-container {
+    width: 400px;
   }
   
   #solution-input {

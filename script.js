@@ -95,11 +95,58 @@ class CountdownNumbersGame {
       if (parseInt(solution) === game.targetNumber) {
         alert("Congratulations! Your solution is correct.");
         document.getElementById("score-result").textContent = "Your solution is correct!";
-      } else {
+        // += 10 POINTS
+      } else { // delta < 5 += 7 POINTS ETC.
         alert("Oops! Your solution is incorrect.");
         document.getElementById("score-result").textContent = "Your solution is incorrect.";
       }
     });
+
+    // add canvas on game start click
+    const canvasContainer = document.getElementById("canvas-container");
+    const canvas = document.createElement("canvas");
+    const canvasText = document.createElement("h2");
+    canvasText.textContent = "Solution Canvas";
+    canvasContainer.appendChild(canvasText);
+    canvasContainer.appendChild(canvas);
+
+    // canvas logic
+    const ctx = canvas.getContext("2d");
+
+    let drawing = false;
+
+    function startPosition(e) {
+      drawing = true;
+      draw(e);
+    }
+
+    function endPosition() {
+      drawing = false;
+      ctx.beginPath();
+    }
+
+    function draw(e) {
+      if (!drawing) return;
+      console.log("moved")
+      
+      // line styling
+      ctx.lineWidth = 4;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "red";
+
+      // draw logic
+      ctx.lineTo(e.clientX, e.clientY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX, e.clientY);
+    }
+
+    // event listners
+    canvas.addEventListener("mousedown", startPosition);
+    // canvas.addEventListener("mousedown", console.log("CLICKED"));
+    canvas.addEventListener("mouseup", endPosition);
+    canvas.addEventListener("mousemove", draw);
+    //
   });
   
   function generateNumbers(numLargeNumbers, numSmallNumbers) {
@@ -161,7 +208,7 @@ class CountdownNumbersGame {
     numbersContainer.appendChild(numbersList);
 
     const targetNumberTitle = document.createElement("h2");
-    targetNumberTitle.textContent = "Target Number:";
+    targetNumberTitle.textContent = "Target Number";
     numbersContainer.appendChild(targetNumberTitle);
 
     const targetNumberDisplay = document.createElement("h2");
