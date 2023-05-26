@@ -78,29 +78,8 @@ class CountdownNumbersGame {
     const game = new CountdownNumbersGame(targetNumber, chosenNumbers);
     
     alert("Game started! Target number: " + targetNumber);
-    
-    document.getElementById("score-button").addEventListener("click", function() {
-      const solution = document.getElementById("solution-input").value;
-      
-      if (solution === "") {
-        alert("Please enter a solution.");
-        return;
-      }
-      
-      if (solution === null) {
-        alert("The game hasn't been solved yet. Keep trying!");
-        return;
-      }
 
-      if (parseInt(solution) === game.targetNumber) {
-        alert("Congratulations! Your solution is correct.");
-        document.getElementById("score-result").textContent = "Your solution is correct!";
-        // += 10 POINTS
-      } else { // delta < 5 += 7 POINTS ETC.
-        alert("Oops! Your solution is incorrect.");
-        document.getElementById("score-result").textContent = "Your solution is incorrect.";
-      }
-    });
+    document.getElementById("start-game").remove(); // remove start-game button
 
     // add canvas on game start click
     const canvasContainer = document.getElementById("canvas-container");
@@ -128,7 +107,8 @@ class CountdownNumbersGame {
     }
 
     function draw(e) {
-      if (!isDrawing) return;
+      if (!isDrawing) 
+        return;
 
       // find client position on canvas 
       const rect = canvas.getBoundingClientRect();
@@ -152,6 +132,39 @@ class CountdownNumbersGame {
     canvas.addEventListener("mouseup", endPosition);
     canvas.addEventListener("mousemove", draw);
     //
+    
+    document.getElementById("score-button").addEventListener("click", function() {
+      const solution = document.getElementById("solution-input").value;
+      
+      if (solution === "") {
+        alert("Please enter a solution.");
+        return;
+      }
+      
+      if (solution === null) {
+        alert("The game hasn't been solved yet. Keep trying!");
+        return;
+      }
+
+      if (parseInt(solution) === game.targetNumber) {
+        alert("Congratulations! Your solution is correct."); // += 10 POINTS
+        document.getElementById("score-result").textContent = "Your solution is correct!";
+      } else { 
+        alert("Oops! Your solution is incorrect."); // delta < 5 += 7 POINTS ETC.
+        document.getElementById("score-result").textContent = "Your solution is incorrect.";
+      }
+
+      // save canvas to url for OCR
+      const dataURL = canvas.toDataURL("image/png");
+
+      // Create a link element
+      const link = document.createElement("a");
+      link.href = dataURL;
+      link.download = "canvas_image.png"; // Specify the filename for the downloaded image
+      link.textContent = "Download Image"; // Text to display for the download link
+
+      document.body.appendChild(link); // DEMO
+    });
   });
   
   function generateNumbers(numLargeNumbers, numSmallNumbers) {
