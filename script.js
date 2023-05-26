@@ -104,46 +104,51 @@ class CountdownNumbersGame {
 
     // add canvas on game start click
     const canvasContainer = document.getElementById("canvas-container");
-    const canvas = document.createElement("canvas");
+    
     const canvasText = document.createElement("h2");
     canvasText.textContent = "Solution Canvas";
     canvasContainer.appendChild(canvasText);
+
+    const canvas = document.createElement("canvas");
     canvasContainer.appendChild(canvas);
 
     // canvas logic
     const ctx = canvas.getContext("2d");
 
-    let drawing = false;
+    let isDrawing = false;
 
     function startPosition(e) {
-      drawing = true;
+      isDrawing = true;
       draw(e);
     }
 
     function endPosition() {
-      drawing = false;
+      isDrawing = false;
       ctx.beginPath();
     }
 
     function draw(e) {
-      if (!drawing) return;
-      console.log("moved")
+      if (!isDrawing) return;
+
+      // find client position on canvas 
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
       
       // line styling
-      ctx.lineWidth = 4;
+      ctx.lineWidth = 2;
       ctx.lineCap = "round";
-      ctx.strokeStyle = "red";
+      ctx.strokeStyle = "blue";
 
       // draw logic
-      ctx.lineTo(e.clientX, e.clientY);
+      ctx.lineTo(x, y);
       ctx.stroke();
       ctx.beginPath();
-      ctx.moveTo(e.clientX, e.clientY);
+      ctx.moveTo(x, y);
     }
 
     // event listners
     canvas.addEventListener("mousedown", startPosition);
-    // canvas.addEventListener("mousedown", console.log("CLICKED"));
     canvas.addEventListener("mouseup", endPosition);
     canvas.addEventListener("mousemove", draw);
     //
