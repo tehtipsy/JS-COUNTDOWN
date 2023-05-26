@@ -127,14 +127,125 @@ class CountdownNumbersGame {
       ctx.moveTo(x, y);
     }
 
-    // event listners
-    canvas.addEventListener("mousedown", startPosition);
-    canvas.addEventListener("mouseup", endPosition);
-    canvas.addEventListener("mousemove", draw);
+    // add dragable numbers
 
-    canvas.addEventListener("touchstart", startPosition);
-    canvas.addEventListener("touchend", endPosition);
-    canvas.addEventListener("touchmove", draw);
+    const drawnNumbers = drawNumbers(null);
+    
+    let selectedNumberIndex = null; // Index of the selected/dragged number
+
+    function drawNumbers(positions) {
+      const numberCount = chosenNumbers.length;
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      const startX = canvasWidth * 0.1; // Starting X position for numbers
+      const startY = canvasHeight * 0.5; // Starting Y position for numbers
+      const padding = 20; // Padding between numbers
+      const numberWidth = 20; // Width of each number box
+      const numberHeight = 30; // Height of each number box
+    
+      ctx.font = "20px Arial";
+      ctx.fillStyle = "blue";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+    
+      const numbers = []; // Array to store the drawn number elements
+    
+      for (let i = 0; i < numberCount; i++) {
+        const number = chosenNumbers[i];
+
+        let position;
+        if (positions && positions[i]) {
+          position = positions[i];
+        } else {
+          const numberX = startX + (numberWidth + padding) * i;
+          const numberY = startY;
+          position = { x: numberX, y: numberY };
+        }
+    
+        const numberX = position.x;
+        const numberY = position.y;
+    
+        ctx.fillText(number.toString(), numberX + numberWidth / 2, numberY + numberHeight / 2);
+    
+        // Create a number element object with its position
+        const numberElement = {
+          number: number,
+          x: numberX,
+          y: numberY,
+          width: numberWidth,
+          height: numberHeight,
+        };
+    
+        numbers.push(numberElement);
+      }
+    
+      return numbers; // Return the array of drawn number elements
+    }
+    
+    // const numberPositions = drawnNumbers.map((numberElement) => {
+    let numberPositions = drawnNumbers.map((numberElement) => {
+        return { x: numberElement.x, y: numberElement.y };
+    });
+    
+    // Event listeners for each number
+    for (let i = 0; i < drawnNumbers.length; i++) {
+      const numberElement = drawnNumbers[i];
+      const numberIndex = i;
+    
+      canvas.addEventListener("pointerdown", function(event) {
+        const rect = canvas.getBoundingClientRect();
+        const pointerX = event.clientX - rect.left;
+        const pointerY = event.clientY - rect.top;
+    
+        if (
+          pointerX >= numberElement.x &&
+          pointerX <= numberElement.x + numberElement.width &&
+          pointerY >= numberElement.y &&
+          pointerY <= numberElement.y + numberElement.height
+        ) {
+          selectedNumberIndex = numberIndex;
+        }
+      });
+
+    
+      canvas.addEventListener("pointermove", function(event) {
+        if (selectedNumberIndex !== null) {
+          const rect = canvas.getBoundingClientRect();
+          const pointerX = event.clientX - rect.left;
+          const pointerY = event.clientY - rect.top;
+    
+          const numberElement = drawnNumbers[selectedNumberIndex];
+          numberElement.x = pointerX - numberElement.width / 2;
+          numberElement.y = pointerY - numberElement.height / 2;
+    
+          // Update the positions array
+          numberPositions[selectedNumberIndex] = {
+            x: numberElement.x,
+            y: numberElement.y,
+          };
+    
+          // Clear the canvas and redraw the numbers with updated positions
+          ctx.clearRect(0, 0, canvas.width, canvas.height); // fix draw function
+          drawNumbers(numberPositions);
+        }
+      });
+        
+      canvas.addEventListener("pointerup", function() {
+        if (selectedNumberIndex !== null) {
+          selectedNumberIndex = null;
+    
+          // Redraw the numbers after updating their positions
+          ctx.clearRect(0, 0, canvas.width, canvas.height); // fix draw fucntion
+          
+          // Update the numberPositions array with the new positions
+          drawNumbers(numberPositions);
+        }
+      });
+    }
+
+    canvas.addEventListener("pointerdown", startPosition);
+    canvas.addEventListener("pointerup", endPosition);
+    canvas.addEventListener("pointermove", draw);
     //
     
     document.getElementById("score-button").addEventListener("click", function() {
