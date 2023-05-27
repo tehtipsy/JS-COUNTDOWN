@@ -1,16 +1,21 @@
 .container {
     text-align: center;
     padding: 20px;
+    border: 2px solid lightblue;
+    border-radius: 6px;
   }
   
   h1 {
     font-size: 24px;
   }
 
+  h2 {
+    font-size: 20px;
+  }
+
   canvas {
     border: 2px solid black;
   }
-  
   
   #game-container {
     display: flex;
@@ -20,6 +25,8 @@
   
   #numbers-container {
     width: 200px;
+    border: 2px solid lightblue;
+    border-radius: 6px;
   }
   
   .number-selection {
@@ -28,10 +35,14 @@
   
   #solution-container {
     width: 200px;
+    border: 2px solid lightblue;
+    border-radius: 6px;
   }
 
   #canvas-container {
     width: 400px;
+    border: 2px solid lightblue;
+    border-radius: 6px;
   }
   
   #solution-input {
@@ -48,3 +59,8 @@
     margin-top: 10px;
   }
   
+  #timer-container {
+    justify-self: top;
+    display: flex;
+    margin-top: 10px;
+  }

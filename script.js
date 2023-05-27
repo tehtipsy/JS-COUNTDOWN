@@ -77,14 +77,55 @@ class CountdownNumbersGame {
     
     const game = new CountdownNumbersGame(targetNumber, chosenNumbers);
     
-    alert("Game started! Target number: " + targetNumber);
+    const audio = new Audio('./The Countdown Clock1.mp3');
+
+    alert("Game started! you have 30 Seconds To Get The Target number: " + targetNumber);
+
+    audio.play();
 
     document.getElementById("start-game").remove(); // remove start-game button
 
-    // add canvas on game start click
+    // add canvas and timer on game start click
     const canvasContainer = document.getElementById("canvas-container");
     
-    const canvasText = document.createElement("h2");
+    // timer
+    const timerText = document.createElement("h5");
+    timerText.textContent = "Time Remaning: ";
+    canvasContainer.appendChild(timerText);
+
+    const timerSpan = document.createElement("span");
+    timerSpan.textContent = "30";
+    canvasContainer.appendChild(timerSpan);
+    
+    let isPromptAnswered = false; // Flag variable to track prompt status
+
+    function setTimer() {
+      if (parseInt(timerSpan.textContent) >= 1) {
+        let remainingTime = parseInt(timerSpan.textContent);
+        remainingTime-=1;
+        timerSpan.textContent = remainingTime;
+      } else { // end the game on 0
+        if (!isPromptAnswered) {
+          const userInput = prompt("Time is up! Enter Solution:");
+          const userSolution = parseInt(userInput)
+
+          if (parseInt(userInput) === game.targetNumber) {
+            alert("Congratulations! Your solution is correct."); // += 10 POINTS
+            document.getElementById("score-result").textContent = "Your solution is correct!";
+          } else { 
+            alert("Oops! Your solution is incorrect."); // delta < 5 += 7 POINTS ETC.
+            document.getElementById("score-result").textContent = "Your solution is incorrect.";
+          }
+          isPromptAnswered = true;
+          return userSolution;
+        }      
+      };
+    }
+    
+    setInterval(setTimer, 1000); 
+
+    // canvas
+    const canvasText = document.createElement("h5");
     canvasText.textContent = "Solution Canvas";
     canvasContainer.appendChild(canvasText);
 
@@ -118,7 +159,7 @@ class CountdownNumbersGame {
       // line styling
       ctx.lineWidth = 2;
       ctx.lineCap = "round";
-      ctx.strokeStyle = "blue";
+      ctx.strokeStyle = "red";
 
       // draw logic
       ctx.lineTo(x, y);
@@ -182,7 +223,6 @@ class CountdownNumbersGame {
       return numbers; // Return the array of drawn number elements
     }
     
-    // const numberPositions = drawnNumbers.map((numberElement) => {
     let numberPositions = drawnNumbers.map((numberElement) => {
         return { x: numberElement.x, y: numberElement.y };
     });
@@ -207,7 +247,6 @@ class CountdownNumbersGame {
         }
       });
 
-    
       canvas.addEventListener("pointermove", function(event) {
         if (selectedNumberIndex !== null) {
           const rect = canvas.getBoundingClientRect();
@@ -235,7 +274,7 @@ class CountdownNumbersGame {
           selectedNumberIndex = null;
     
           // Redraw the numbers after updating their positions
-          ctx.clearRect(0, 0, canvas.width, canvas.height); // fix draw fucntion
+          ctx.clearRect(0, 0, canvas.width, canvas.height); // fix draw function
           
           // Update the numberPositions array with the new positions
           drawNumbers(numberPositions);
@@ -243,14 +282,22 @@ class CountdownNumbersGame {
       });
     }
 
+    // drawing lines
     canvas.addEventListener("pointerdown", startPosition);
     canvas.addEventListener("pointerup", endPosition);
     canvas.addEventListener("pointermove", draw);
     //
     
     document.getElementById("score-button").addEventListener("click", function() {
+      // let solution;
+      // if (!setTimer()){
+      //   solution = document.getElementById("solution-input").value;
+      // } else {
+      //   solution = setTimer();
+      // }
+
       const solution = document.getElementById("solution-input").value;
-      
+
       if (solution === "") {
         alert("Please enter a solution.");
         return;
@@ -301,25 +348,6 @@ class CountdownNumbersGame {
     }
     
     return chosenNumbers;
-  }
-  
-  function displaySelectedNumbers(numbers) {
-    const numbersContainer = document.getElementById("numbers-container");
-    numbersContainer.innerHTML = "";
-    
-    const numbersTitle = document.createElement("h2");
-    numbersTitle.textContent = "Selected Numbers";
-    numbersContainer.appendChild(numbersTitle);
-    
-    const numbersList = document.createElement("ul");
-    
-    for (const number of numbers) {
-      const numberItem = document.createElement("li");
-      numberItem.textContent = number;
-      numbersList.appendChild(numberItem);
-    }
-    
-    numbersContainer.appendChild(numbersList);
   }
 
   function displaySelectedNumbersAndTargetNumber(numbers, targetNumber) {
